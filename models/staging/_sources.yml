@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: "Datos en el Tablon cargados del csv"
+
+    database: "{{ env_var('DBT_BRONZE_DB_APN') }}"
+    schema: RAW
+
+    tables:
+      - name: TABLON
+        description: "Tablon RAW contiene usuarios, peliculas, visualizaciones, reseñas, busquedas y recomendaciones"
