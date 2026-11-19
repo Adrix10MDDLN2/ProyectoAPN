@@ -4,14 +4,16 @@ Extraemos los registros de usuarios de Bronze,
 renombramos las columnas y convertimos los tipos de datos.
 */
 WITH origen AS (
-    {{ origen_staging('user_snapshot') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'user_snapshot'
 ),
 
 usuarios AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
-        {{ campo_comun_staging('id_usuario', limpiar_id=false) }},
-        
+        id_registro,
+        id_usuario,
+
         {{ limpiar_texto('SRC__EMAIL') }} AS correo_electronico,
         {{ limpiar_texto('SRC__FIRST_NAME') }} AS nombre,
         {{ limpiar_texto('SRC__LAST_NAME') }} AS apellidos,
@@ -31,8 +33,8 @@ usuarios AS (
         {{ limpiar_entero('SRC__HOUSEHOLD_SIZE') }} AS miembros_hogar,
         {{ limpiar_timestamp('SRC__CREATED_AT') }} AS fecha_creacion,
 
-        {{ campo_comun_staging('fecha_evento', tipo_fecha='timestamp') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_timestamp AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )

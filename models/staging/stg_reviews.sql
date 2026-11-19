@@ -5,15 +5,17 @@ renombramos columnas y convertimos tipos
 Conservamos todos los registros originales.
 */
 WITH origen AS (
-    {{ origen_staging('review') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'review'
 ),
 resenas AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
+        id_registro,
 
         {{ limpiar_texto('SRC__REVIEW_ID') }} AS id_resena,
-        {{ campo_comun_staging('id_usuario') }},
-        {{ campo_comun_staging('id_pelicula') }},
+        id_usuario,
+        id_pelicula,
 
         {{ limpiar_entero('SRC__RATING') }} AS puntuacion,
         {{ limpiar_fecha('SRC__REVIEW_DATE') }} AS fecha_resena,
@@ -28,8 +30,8 @@ resenas AS (
 
         {{ limpiar_decimal('SRC__SENTIMENT_SCORE', 5, 3) }} AS puntuacion_sentimiento,
 
-        {{ campo_comun_staging('fecha_evento') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_date AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )

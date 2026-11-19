@@ -4,17 +4,19 @@ Filtramos, renombramos y convertimos tipos.
 Conservamos todos los registros originales.
 */
 WITH origen AS (
-    {{ origen_staging('recommendation_log') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'recommendation_log'
 ),
 
 recomendaciones AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
+        id_registro,
 
         {{ limpiar_texto('SRC__RECOMMENDATION_ID') }} AS id_recomendacion,
 
-        {{ campo_comun_staging('id_usuario') }},
-        {{ campo_comun_staging('id_pelicula') }},
+        id_usuario,
+        id_pelicula,
 
         {{ limpiar_fecha('SRC__RECOMMENDATION_DATE') }} AS fecha_recomendacion,
 
@@ -32,8 +34,8 @@ recomendaciones AS (
 
         {{ limpiar_texto('SRC__ALGORITHM_VERSION') }} AS version_algoritmo,
 
-        {{ campo_comun_staging('fecha_evento') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_date AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )
