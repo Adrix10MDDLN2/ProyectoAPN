@@ -5,16 +5,18 @@ renombramos columnas y convertimos tipos.
 No eliminamos duplicados ni aplicamos reglas de negocio.
 */
 WITH origen AS (
-    {{ origen_staging('watch_session') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'watch_session'
 ),
 
 sesiones AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
+        id_registro,
         {{ limpiar_texto('SRC__SESSION_ID') }} AS id_sesion,
 
-        {{ campo_comun_staging('id_usuario') }},
-        {{ campo_comun_staging('id_pelicula') }},
+        id_usuario,
+        id_pelicula,
 
         {{ limpiar_fecha('SRC__WATCH_DATE') }} AS fecha_visualizacion,
 
@@ -29,8 +31,8 @@ sesiones AS (
 
         {{ limpiar_decimal('SRC__USER_RATING', 4, 2) }} AS puntuacion_usuario,
 
-        {{ campo_comun_staging('fecha_evento') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_date AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )

@@ -4,13 +4,15 @@ Filtramos los registros del catálogo, renombramos
 las columnas y convertimos los tipos de datos
 */
 WITH origen AS (
-    {{ origen_staging('movie_catalog') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'movie_catalog'
 ),
 
 peliculas AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
-        {{ campo_comun_staging('id_pelicula', limpiar_id=false) }},
+        id_registro,
+        id_pelicula,
 
         {{ limpiar_texto('SRC__TITLE') }} AS titulo,
         {{ limpiar_texto('SRC__CONTENT_TYPE') }} AS tipo_contenido,
@@ -35,8 +37,8 @@ peliculas AS (
 
         {{ limpiar_booleano('SRC__CONTENT_WARNING') }} AS advertencia_contenido,
 
-        {{ campo_comun_staging('fecha_evento', tipo_fecha='timestamp') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_timestamp AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )

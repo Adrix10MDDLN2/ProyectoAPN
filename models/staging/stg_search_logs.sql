@@ -4,15 +4,17 @@ Filtramos, renombramos y convertimos tipos.
 Conservamos todos los registros originales.
 */
 WITH origen AS (
-    {{ origen_staging('search_log') }}
+    SELECT *
+    FROM {{ ref('ephemeral_tablon_camposComunes') }}
+    WHERE RECORD_TYPE = 'search_log'
 ),
 
 busquedas AS (
     SELECT
-        {{ campo_comun_staging('id_registro') }},
+        id_registro,
 
         {{ limpiar_texto('SRC__SEARCH_ID') }} AS id_busqueda,
-        {{ campo_comun_staging('id_usuario') }},
+        id_usuario,
 
         {{ limpiar_texto('SRC__SEARCH_QUERY') }} AS texto_busqueda,
 
@@ -29,8 +31,8 @@ busquedas AS (
 
         {{ limpiar_texto('SRC__LOCATION_COUNTRY') }} AS pais_busqueda,
 
-        {{ campo_comun_staging('fecha_evento') }},
-        {{ campo_comun_staging('fecha_carga') }}
+        fecha_evento_date AS fecha_evento,
+        fecha_carga
 
     FROM origen
 )
