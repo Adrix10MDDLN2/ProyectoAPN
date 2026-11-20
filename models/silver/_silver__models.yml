@@ -1,0 +1,297 @@
+version: 2
+
+models:
+  - name: slv_paises
+    description: Catálogo normalizado de países
+    columns:
+      - name: id_pais
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_pais
+        data_tests:
+          - not_null
+
+  - name: slv_planes_suscripcion
+    description: Catálogo de planes de suscripción
+    columns:
+      - name: id_plan
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_plan
+        data_tests:
+          - not_null
+
+  - name: slv_generos
+    description: Catálogo normalizado de géneros
+    columns:
+      - name: id_genero
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_genero
+        data_tests:
+          - not_null
+
+  - name: slv_dispositivos
+    description: Catálogo de dispositivos
+    columns:
+      - name: id_dispositivo
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_dispositivo
+        data_tests:
+          - not_null
+
+  - name: slv_algoritmos
+    description: Catálogo de versiones de algoritmos
+    columns:
+      - name: id_algoritmo
+        data_tests:
+          - unique
+          - not_null
+      - name: version_algoritmo
+        data_tests:
+          - not_null
+
+  - name: slv_usuarios
+    description: Usuarios únicos de la plataforma
+    columns:
+      - name: id_usuario
+        data_tests:
+          - unique
+          - not_null
+      - name: id_pais
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_paises')
+                field: id_pais
+      - name: id_dispositivo_principal
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_dispositivos')
+                field: id_dispositivo
+      - name: edad
+        data_tests:
+          - no_negativ
+      - name: miembros_hogar
+        data_tests:
+          - no_negativ
+
+  - name: slv_suscripciones
+    description: Información de suscripción de cada usuario
+    columns:
+      - name: id_usuario
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_usuarios')
+                field: id_usuario
+      - name: id_plan
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_planes_suscripcion')
+                field: id_plan
+      - name: gasto_mensual
+        data_tests:
+          - no_negativ
+
+  - name: slv_peliculas
+    description: Catálogo de películas y series únicas
+    columns:
+      - name: id_pelicula
+        data_tests:
+          - unique
+          - not_null
+      - name: id_pais_origen
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_paises')
+                field: id_pais
+      - name: anio_estreno
+        data_tests:
+          - no_negativ
+      - name: duracion_minutos
+        data_tests:
+          - no_negativ
+      - name: puntuacion_imdb
+        data_tests:
+          - no_negativ
+      - name: presupuesto_produccion
+        data_tests:
+          - no_negativ
+      - name: recaudacion_taquilla
+        data_tests:
+          - no_negativ
+      - name: numero_temporadas
+        data_tests:
+          - no_negativ
+      - name: numero_episodios
+        data_tests:
+          - no_negativ
+
+  - name: slv_pelicula_generos
+    description: Tabla puente entre películas y géneros
+    columns:
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_peliculas')
+                field: id_pelicula
+      - name: id_genero
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_generos')
+                field: id_genero
+      - name: tipo_genero
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - principal
+                  - secundario
+
+  - name: slv_visualizaciones
+    description: Sesiones de visualización únicas
+    columns:
+      - name: id_sesion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_usuarios')
+                field: id_usuario
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_peliculas')
+                field: id_pelicula
+      - name: duracion_visualizada_minutos
+        data_tests:
+          - no_negativ
+      - name: porcentaje_progreso
+        data_tests:
+          - no_negativ
+      - name: puntuacion_usuario
+        data_tests:
+          - no_negativ
+
+  - name: slv_resenas
+    description: Reseñas únicas realizadas por los usuarios.
+    columns:
+      - name: id_resena
+        data_tests:
+          - unique
+          - not_null
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_usuarios')
+                field: id_usuario
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_peliculas')
+                field: id_pelicula
+      - name: puntuacion
+        data_tests:
+          - no_negativ
+      - name: votos_utiles
+        data_tests:
+          - no_negativ
+      - name: votos_totales
+        data_tests:
+          - no_negativ
+
+  - name: slv_busquedas
+    description: Registros únicos de búsquedas
+    columns:
+      - name: id_busqueda
+        data_tests:
+          - unique
+          - not_null
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_usuarios')
+                field: id_usuario
+      - name: id_pais_busqueda
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_paises')
+                field: id_pais 
+      - name: resultados_obtenidos
+        data_tests:
+          - no_negativ
+      - name: duracion_busqueda_segundos
+        data_tests:
+          - no_negativ
+      - name: posicion_resultado_clicado
+        data_tests:
+          - no_negativ
+
+  - name: slv_recomendaciones
+    description: Registros únicos de recomendaciones
+    columns:
+      - name: id_recomendacion
+        data_tests:
+          - unique
+          - not_null
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_usuarios')
+                field: id_usuario
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('slv_peliculas')
+                field: id_pelicula
+      - name: id_dispositivo
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_dispositivos')
+                field: id_dispositivo
+      - name: id_algoritmo
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('slv_algoritmos')
+                field: id_algoritmo
+      - name: puntuacion_recomendacion
+        data_tests:
+          - no_negativ
+      - name: posicion_lista
+        data_tests:
+          - no_negativ
