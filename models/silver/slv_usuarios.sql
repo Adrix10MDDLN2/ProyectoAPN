@@ -15,7 +15,10 @@ usuarios_limpios AS (
         correo_electronico,
         nombre,
         apellidos,
-        edad,
+        CASE
+            WHEN edad < 0 THEN NULL
+            ELSE edad
+        END AS edad,
         genero,
         MD5(UPPER(TRIM(pais))) AS id_pais,
         provincia,

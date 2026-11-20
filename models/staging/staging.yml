@@ -1,0 +1,120 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Registros de usuarios extraídos y limpiados de Bronze"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
+
+  - name: stg_movies
+    description: "Catálogo de películas y series"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
+
+  - name: stg_watch_sessions
+    description: "Registros de sesiones de visualización"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_sesion
+        data_tests:
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
+
+  - name: stg_reviews
+    description: "Reseñas realizadas por los usuarios"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_resena
+        data_tests:
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
+
+  - name: stg_search_logs
+    description: "Registros de búsquedas de los usuarios"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_busqueda
+        data_tests:
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
+
+  - name: stg_recommendation_logs
+    description: "Registros de recomendaciones de la plataforma"
+    columns:
+      - name: id_registro
+        data_tests:
+          - not_null
+
+      - name: id_recomendacion
+        data_tests:
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+
+      - name: fecha_carga
+        data_tests:
+          - not_null
