@@ -1,0 +1,201 @@
+version: 2
+
+models:
+  - name: dim_fecha
+    columns:
+      - name: id_fecha
+        data_tests:
+          - unique
+          - not_null
+
+      - name: fecha
+        data_tests:
+          - unique
+          - not_null
+
+      - name: anio
+        data_tests:
+          - not_null
+
+      - name: mes
+        data_tests:
+          - not_null
+
+  - name: dim_usuarios
+    columns:
+      - name: id_usuario
+        data_tests:
+          - unique
+          - not_null
+
+      - name: edad
+        data_tests:
+          - no_negativ
+
+      - name: miembros_hogar
+        data_tests:
+          - no_negativ:
+              arguments:
+                permitir_cero: false
+
+  - name: dim_peliculas
+    columns:
+      - name: id_pelicula
+        data_tests:
+          - unique
+          - not_null
+
+      - name: titulo
+        data_tests:
+          - not_null
+
+      - name: puntuacion_imdb
+        data_tests:
+          - no_negativ
+
+  - name: dim_algoritmos
+    columns:
+      - name: id_algoritmo
+        data_tests:
+          - unique
+          - not_null
+
+      - name: version_algoritmo
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_dispositivos
+    columns:
+      - name: id_dispositivo
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nombre_dispositivo
+        data_tests:
+          - unique
+          - not_null
+
+  - name: fct_visualizaciones
+    columns:
+      - name: id_sesion
+        data_tests:
+          - unique
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_usuarios')
+                field: id_usuario
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_peliculas')
+                field: id_pelicula
+
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_fecha')
+                field: id_fecha
+
+      - name: total_sesiones
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1]
+                quote: false
+
+      - name: duracion_visualizada_minutos
+        data_tests:
+          - no_negativ
+
+      - name: porcentaje_progreso
+        data_tests:
+          - no_negativ
+
+      - name: es_finalizada
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [true, false]
+                quote: false
+
+  - name: fct_recomendaciones
+    columns:
+      - name: id_recomendacion
+        data_tests:
+          - unique
+          - not_null
+
+      - name: id_usuario
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_usuarios')
+                field: id_usuario
+
+      - name: id_pelicula
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_peliculas')
+                field: id_pelicula
+
+      - name: id_fecha
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_fecha')
+                field: id_fecha
+
+      - name: id_dispositivo
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dispositivos')
+                field: id_dispositivo
+
+      - name: id_algoritmo
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_algoritmos')
+                field: id_algoritmo
+
+      - name: total_recomendaciones
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1]
+                quote: false
+
+      - name: indicador_clic
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+
+      - name: puntuacion_recomendacion
+        data_tests:
+          - no_negativ
+
+      - name: posicion_lista
+        data_tests:
+          - no_negativ:
+              arguments:
+                permitir_cero: false
