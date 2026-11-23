@@ -4,7 +4,6 @@ SELECT
     id_pelicula,
     id_algoritmo,
     id_dispositivo,
-
     TO_NUMBER(
         TO_CHAR(fecha_recomendacion, 'YYYYMMDD')
     ) AS id_fecha,
