@@ -1,0 +1,16 @@
+snapshots:
+  - name: snap_suscripciones
+    relation: ref('slv_suscripciones')
+
+    config:
+      database: "{{ env_var('DBT_SILVER_DB_APN') }}"
+      schema: snapshots
+
+      unique_key: id_usuario
+      strategy: check
+
+      check_cols:
+        - id_plan
+        - esta_activo
+        - gasto_mensual
+        - fecha_inicio_suscripcion
