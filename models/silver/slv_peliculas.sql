@@ -31,7 +31,7 @@ peliculas_incrementales AS (
             SELECT DATEADD(
                 DAY, -2, MAX(fecha_carga)
             )
-            FROM {{ this }}
+            FROM {{ this }} as destino
         )
     {% endif %}
 )
